@@ -1,11 +1,11 @@
 [package]
-name = "PaymentSystem"
+name = "GlobalPaymentSystem"
 version = "0.0.0"
 
 [dependencies]
 AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-framework", rev = "mainnet" }
 
 [addresses]
-my_addrx = "7d7b74f22d4b939a5faec57faafefe6431c56861053b046b3130e15d258369a5"
+my_addrx = "355afa735ffb0e2e6a76ee3242bb17ffd937d2677e1aa64161c84970dd2ab40e"
 sys_addrx="0xca10b0176c34f9a8315589ff977645e04497814e9753d21f7d7e7c3d83aa7b57"
 std = "0x1"
