@@ -85,7 +85,7 @@ export function MyCollections() {
   }, [account]);
   return (
     <>
-      <LaunchpadHeader title="Apply As Freelancer" />
+      <LaunchpadHeader title="All Payments" />
       <div className="flex flex-col items-center justify-center px-4 py-2 gap-4 max-w-screen-xl mx-auto">
         <div className="w-full flex flex-col gap-y-4">
           <Card>
@@ -101,7 +101,12 @@ export function MyCollections() {
                   render={(payment_amount: number) => convertAmountFromOnChainToHumanReadable(payment_amount, 8)}
                 />
                 <Column title="Payer" dataIndex="payer" render={(creator: string) => creator.substring(0, 6)} />
-                <Column title="Payee" dataIndex="payee" render={(creator: string) => creator.substring(0, 10)} />
+                <Column
+                  title="Payee"
+                  dataIndex="payee"
+                  responsive={["md"]}
+                  render={(creator: string) => creator.substring(0, 10)}
+                />
                 <Column
                   title="Message"
                   dataIndex="msg"

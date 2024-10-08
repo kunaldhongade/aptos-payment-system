@@ -1,12 +1,12 @@
-import { Col, Grid, Row, Typography } from "antd"; // Imported Ant Design components
+import { Col, Grid, Row, Typography } from "antd";
 import { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { WalletSelector } from "@/components/WalletSelector";
 import { buttonVariants } from "@/components/ui/button";
 
-const { Title } = Typography; // Destructure Title from Typography
-const { useBreakpoint } = Grid; // Antd's hook for responsive breakpoints
+const { Title } = Typography;
+const { useBreakpoint } = Grid;
 
 interface LaunchpadHeaderProps {
   title: string;
@@ -14,32 +14,46 @@ interface LaunchpadHeaderProps {
 
 export const LaunchpadHeader: FC<LaunchpadHeaderProps> = ({ title }) => {
   const location = useLocation();
-  const screens = useBreakpoint(); // Get current screen size
+  const screens = useBreakpoint();
 
   return (
-    <Row align="middle" justify="space-between" className="py-2 px-4 mx-auto w-full max-w-screen-xl">
+    <Row align="middle" justify="space-between" className="py-4 px-6 mx-auto w-full max-w-screen-xl">
       <Col>
-        {/* Responsive Title with Ant Design's Typography */}
+        {/* Responsive Title */}
         <Title level={screens.xs ? 3 : screens.sm ? 2 : 1} className="m-0">
           {title}
         </Title>
       </Col>
 
       <Col>
-        <div className="flex gap-2 items-center">
-          <Link className={buttonVariants({ variant: "link" })} to={"/"}>
+        {/* Flex container with fixed width for links */}
+        <div className="flex gap-4 items-center justify-between">
+          <Link
+            className={`${buttonVariants({ variant: "link" })} w-24 text-center`} // Fixed width with center alignment
+            to={"/"}
+          >
             Home
           </Link>
           {location.pathname === "/view-payments" ? (
-            <Link className={buttonVariants({ variant: "link" })} to={"/make-payments"}>
+            <Link
+              className={`${buttonVariants({ variant: "link" })} w-24 text-center`} // Fixed width with center alignment
+              to={"/make-payments"}
+            >
               Make Payments
             </Link>
           ) : (
-            <Link className={buttonVariants({ variant: "link" })} to={"/view-payments"}>
+            <Link
+              className={`${buttonVariants({ variant: "link" })} w-24 text-center`} // Fixed width with center alignment
+              to={"/view-payments"}
+            >
               View
             </Link>
           )}
-          <WalletSelector />
+          <div className="flex-shrink-0">
+            {" "}
+            {/* Prevents shrinking for the wallet selector */}
+            <WalletSelector />
+          </div>
         </div>
       </Col>
     </Row>

@@ -1,28 +1,45 @@
 import { buttonVariants } from "@/components/ui/button";
+import { Col, Grid, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { WalletSelector } from "./WalletSelector";
 
-export function Header() {
-  return (
-    <div className="flex items-center justify-between px-4 py-2 max-w-screen-xl mx-auto w-full flex-wrap md:flex-nowrap">
-      <h1 className="display">
-        <Link to="/" style={{ fontFamily: "unset" }}>
-          Aptos Payments Platform
-        </Link>
-      </h1>
+const { Title } = Typography;
+const { useBreakpoint } = Grid;
 
-      <div className="flex gap-2 items-center">
-        <>
-          <Link className={buttonVariants({ variant: "link" })} to={"/make-payments"}>
+export function Header() {
+  const screens = useBreakpoint();
+
+  return (
+    <Row align="middle" justify="space-between" className="py-4 px-6 mx-auto w-full max-w-screen-xl">
+      <Col>
+        {/* Header Title */}
+        <Title level={screens.xs ? 3 : screens.sm ? 2 : 1} className="m-0">
+          <Link to="/" style={{ fontFamily: "unset", color: "inherit" }}>
+            Aptos Payments Platform
+          </Link>
+        </Title>
+      </Col>
+
+      <Col>
+        {/* Flex container with even spacing */}
+        <div className="flex gap-4 items-center justify-between">
+          <Link
+            className={`${buttonVariants({ variant: "link" })} w-24 text-center`} // Fixed width with center alignment
+            to={"/make-payments"}
+          >
             Make Payments
           </Link>
-          <Link className={buttonVariants({ variant: "link" })} to={"/view-payments"}>
+          <Link
+            className={`${buttonVariants({ variant: "link" })} w-24 text-center`} // Fixed width with center alignment
+            to={"/view-payments"}
+          >
             View
           </Link>
-        </>
-
-        <WalletSelector />
-      </div>
-    </div>
+          <div className="flex-shrink-0">
+            <WalletSelector />
+          </div>
+        </div>
+      </Col>
+    </Row>
   );
 }
