@@ -40,7 +40,7 @@ export function Mint() {
           <p>Developed by Kunal Dhongade</p>
           <Socials />
         </footer>
-        <Footer className="footer">Opinion Platform ©2024 | All Rights Reserved</Footer>
+        <Footer className="footer">Aptos Platform ©2024 | All Rights Reserved</Footer>
       </div>
     </>
   );

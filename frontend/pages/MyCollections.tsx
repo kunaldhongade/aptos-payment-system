@@ -12,22 +12,17 @@ import { useEffect, useState } from "react";
 const { Column } = Table;
 const { Paragraph } = Typography;
 
-interface Job {
-  job_id: number;
-  client: string;
-  freelancer: string;
-  description: string;
-  payment_amount: number;
-  is_completed: boolean;
-  is_paid: boolean;
-  is_freelancer_assigned: boolean;
-  is_accepted: boolean;
-  job_deadline: number;
+interface Payment {
+  payment_id: number;
+  payer: string;
+  payee: string;
+  amount: number;
+  msg: string;
 }
 
 export function MyCollections() {
   const { account, signAndSubmitTransaction } = useWallet();
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [jobsAppliedBy, setJobsAppliedBy] = useState<Job[]>([]);
   const [jobById, setJobById] = useState<Job | null>(null);
   const [jobId, setJobId] = useState<number | null>(null);
@@ -36,87 +31,32 @@ export function MyCollections() {
     return value / Math.pow(10, decimal);
   };
 
-  function formatTimestamp(timestamp: number) {
-    const date = new Date(Number(timestamp * 1000));
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = date.toLocaleString("en-US", { month: "short" }).toUpperCase();
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const returnDate = `${day} ${month} ${year} ${hours}:${minutes}`;
-
-    return returnDate;
-  }
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const fetchAllJobs = async () => {
+  const fetchAllPayments = async () => {
     try {
       const payload: InputViewFunctionData = {
-        function: `${MODULE_ADDRESS}::FreelanceMarketplace::view_all_jobs`,
+        function: `${MODULE_ADDRESS}::GlobalPaymentSystem::view_all_payments`,
       };
 
       const result = await aptosClient().view({ payload });
 
-      const JobList = result[0];
+      const paymentsList = result[0] as { id: number; payer: string; payee: string; amount: number; msg: string }[];
 
-      if (Array.isArray(JobList)) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setJobs(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          JobList.map((job: any) => ({
-            job_id: job.job_id,
-            client: job.client,
-            freelancer: job.freelancer,
-            description: job.description,
-            payment_amount: job.payment_amount,
-            is_completed: job.is_completed,
-            is_paid: job.is_paid,
-            is_freelancer_assigned: job.is_freelancer_assigned,
-            is_accepted: job.is_accepted,
-            job_deadline: job.job_deadline,
+      if (Array.isArray(paymentsList)) {
+        setPayments(
+          paymentsList.map((payment) => ({
+            payment_id: payment.id,
+            payer: payment.payer,
+            payee: payment.payee,
+            amount: payment.amount,
+            msg: payment.msg,
           })),
         );
       } else {
-        setJobs([]);
+        setPayments([]);
       }
     } catch (error) {
-      console.error("Failed to fetch Jobs:", error);
-    }
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const fetchAllJobsAppliedBy = async () => {
-    try {
-      const WalletAddr = account?.address;
-      const payload: InputViewFunctionData = {
-        function: `${MODULE_ADDRESS}::FreelanceMarketplace::view_jobs_by_freelancer`,
-        functionArguments: [WalletAddr],
-      };
-
-      const result = await aptosClient().view({ payload });
-
-      const jobList = result[0];
-
-      if (Array.isArray(jobList)) {
-        setJobsAppliedBy(
-          jobList.map((job: unknown) => ({
-            job_id: (job as Job).job_id,
-            client: (job as Job).client,
-            freelancer: (job as Job).freelancer,
-            description: (job as Job).description,
-            payment_amount: (job as Job).payment_amount,
-            is_completed: (job as Job).is_completed,
-            is_paid: (job as Job).is_paid,
-            is_freelancer_assigned: (job as Job).is_freelancer_assigned,
-            is_accepted: (job as Job).is_accepted,
-            job_deadline: (job as Job).job_deadline,
-          })),
-        );
-      } else {
-        setJobsAppliedBy([]);
-      }
-    } catch (error) {
-      console.error("Failed to fetch Jobs by freelancer:", error);
+      console.error("Failed to fetch Payments:", error);
     }
   };
 
@@ -131,11 +71,11 @@ export function MyCollections() {
   const fetchJobById = async (job_id: number) => {
     try {
       const payload: InputViewFunctionData = {
-        function: `${MODULE_ADDRESS}::FreelanceMarketplace::view_job_by_id`,
+        function: `${MODULE_ADDRESS}::GlobalPaymentSystem::view_payment_by_id`,
         functionArguments: [job_id],
       };
       const result = await aptosClient().view({ payload });
-      const fetchedJob = result[0] as Job;
+      const fetchedJob = result[0] as Payment;
       setJobById(fetchedJob);
     } catch (error) {
       console.error("Failed to fetch Jobs by freelancer:", error);
@@ -147,7 +87,7 @@ export function MyCollections() {
       const transaction = await signAndSubmitTransaction({
         sender: account?.address,
         data: {
-          function: `${MODULE_ADDRESS}::FreelanceMarketplace::accept_job`,
+          function: `${MODULE_ADDRESS}::GlobalPaymentSystem::accept_job`,
           functionArguments: [values],
         },
       });
@@ -175,7 +115,7 @@ export function MyCollections() {
       const transaction = await signAndSubmitTransaction({
         sender: account?.address,
         data: {
-          function: `${MODULE_ADDRESS}::FreelanceMarketplace::complete_job`,
+          function: `${MODULE_ADDRESS}::GlobalPaymentSystem::complete_job`,
           functionArguments: [values],
         },
       });
@@ -204,7 +144,7 @@ export function MyCollections() {
       const response = await signAndSubmitTransaction({
         sender: account.address,
         data: {
-          function: `${MODULE_ADDRESS}::FreelanceMarketplace::register_freelancer`,
+          function: `${MODULE_ADDRESS}::GlobalPaymentSystem::register_freelancer`,
           functionArguments: [],
         },
       });
@@ -227,10 +167,10 @@ export function MyCollections() {
   };
 
   useEffect(() => {
-    fetchAllJobs();
+    fetchAllPayments();
     fetchAllJobsAppliedBy();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, fetchAllJobs, jobs, fetchAllJobsAppliedBy]);
+  }, [account, jobs, fetchAllJobsAppliedBy]);
   return (
     <>
       <LaunchpadHeader title="Apply As Freelancer" />
@@ -251,60 +191,29 @@ export function MyCollections() {
 
           <Card>
             <CardHeader>
-              <CardDescription>All Available Polls on the Platform</CardDescription>
+              <CardDescription>All Available Payments on the Platform</CardDescription>
             </CardHeader>
             <CardContent>
-              <Table dataSource={jobs} rowKey="job_id" className="max-w-screen-xl mx-auto">
-                <Column title="Job ID" dataIndex="job_id" />
-                <Column title="Client" dataIndex="client" render={(creator: string) => creator.substring(0, 10)} />
+              <Table dataSource={payments} rowKey="" className="max-w-screen-xl mx-auto">
+                <Column title="Payments ID" dataIndex="payment_id" />
+                <Column title="Payee" dataIndex="payee" render={(creator: string) => creator.substring(0, 10)} />
                 <Column
-                  title="Description"
-                  dataIndex="description"
+                  title="Message"
+                  dataIndex="msg"
                   render={(creator: string) => creator.substring(0, 300)}
                   responsive={["lg"]}
                 />
                 <Column
-                  title="Freelancer"
-                  dataIndex="freelancer"
+                  title="Payer"
+                  dataIndex="payer"
                   render={(creator: string) => creator.substring(0, 6)}
                   responsive={["lg"]}
                 />
                 <Column
                   title="Payment Amt"
-                  dataIndex="payment_amount"
+                  dataIndex="amount"
                   responsive={["lg"]}
                   render={(payment_amount: number) => convertAmountFromOnChainToHumanReadable(payment_amount, 8)}
-                />
-                <Column
-                  title="Is Accepted"
-                  dataIndex="is_accepted"
-                  render={(is_open: boolean) => (is_open ? "Open" : "Closed")}
-                  responsive={["md"]}
-                />
-                <Column
-                  title="Is Completed"
-                  dataIndex="is_completed"
-                  render={(is_open: boolean) => (is_open ? "Open" : "Closed")}
-                  responsive={["md"]}
-                />
-                <Column
-                  title="Is Paid"
-                  dataIndex="is_paid"
-                  render={(is_open: boolean) => (is_open ? "Open" : "Closed")}
-                  responsive={["md"]}
-                />
-                <Column
-                  title="Is Freelancer Assigned"
-                  dataIndex="is_freelancer_assigned"
-                  render={(is_open: boolean) => (is_open ? "Open" : "Closed")}
-                  responsive={["md"]}
-                />
-                <Column
-                  title="End Time"
-                  dataIndex="job_deadline"
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  render={(time: any) => formatTimestamp(time).toString()}
-                  responsive={["md"]}
                 />
               </Table>
             </CardContent>
@@ -324,78 +233,37 @@ export function MyCollections() {
                   style={{ marginBottom: 16 }}
                 />
                 <Button onClick={handleFetchPoll} variant="submit" size="lg" className="text-base w-full" type="submit">
-                  Fetch Poll
+                  Fetch Payment
                 </Button>
-
                 {jobById && (
                   <Card key={jobById.job_id} className="mb-6 shadow-lg p-4">
                     <p className="text-sm text-gray-500 mb-4">Job ID: {jobById.job_id}</p>
                     <Card style={{ marginTop: 16, padding: 16 }}>
-                      <div>
-                        <Paragraph>
-                          <strong>Description:</strong> {jobById.description}
-                        </Paragraph>
-                        <Paragraph>
-                          <strong>Client:</strong> <Tag>{jobById.client}</Tag>
-                        </Paragraph>
-                        <Paragraph>
-                          <strong>freelancer:</strong> <Tag>{jobById.freelancer}</Tag>
-                        </Paragraph>
-                        <Paragraph>
-                          <strong>Payment:</strong>{" "}
-                          <Tag>{convertAmountFromOnChainToHumanReadable(jobById.payment_amount, 8)}</Tag>
-                        </Paragraph>
-                        <Paragraph className="my-2">
-                          <strong>Is Accepted:</strong>{" "}
-                          {jobById.is_accepted ? (
-                            <Tag color="green">
-                              <CheckCircleOutlined /> Yes
-                            </Tag>
-                          ) : (
-                            <Tag color="red">
-                              <CloseCircleOutlined /> No
-                            </Tag>
-                          )}
-                        </Paragraph>
-                        <Paragraph className="my-2">
-                          <strong>Is Paid:</strong>{" "}
-                          {jobById.is_paid ? (
-                            <Tag color="green">
-                              <CheckCircleOutlined /> Yes
-                            </Tag>
-                          ) : (
-                            <Tag color="red">
-                              <CloseCircleOutlined /> No
-                            </Tag>
-                          )}
-                        </Paragraph>
-                        <Paragraph className="my-2">
-                          <strong>Is Completed:</strong>{" "}
-                          {jobById.is_completed ? (
-                            <Tag color="green">
-                              <CheckCircleOutlined /> Yes
-                            </Tag>
-                          ) : (
-                            <Tag color="red">
-                              <CloseCircleOutlined /> No
-                            </Tag>
-                          )}
-                        </Paragraph>
-                        <Paragraph className="my-2">
-                          <strong>Is Freelancer Assigned:</strong>{" "}
-                          {jobById.is_freelancer_assigned ? (
-                            <Tag color="green">
-                              <CheckCircleOutlined /> Yes
-                            </Tag>
-                          ) : (
-                            <Tag color="red">
-                              <CloseCircleOutlined /> No
-                            </Tag>
-                          )}
-                        </Paragraph>
-                        <Paragraph>
-                          <strong>End Time:</strong> {new Date(jobById.job_deadline * 1000).toLocaleString()}
-                        </Paragraph>
+                      <div className="p-2">
+                        {payments.map((payment, index) => (
+                          <Card key={index} className="mb-6 shadow-lg p-4">
+                            <p className="text-sm text-gray-500 mb-4">Payments ID: {payment.payment_id}</p>
+                            <Card style={{ marginTop: 16, padding: 16 }}>
+                              {payment && (
+                                <div>
+                                  <Paragraph>
+                                    <strong>Amount:</strong>{" "}
+                                    <Tag>{convertAmountFromOnChainToHumanReadable(payment.amount, 8)}</Tag>
+                                  </Paragraph>
+                                  <Paragraph>
+                                    <strong>Client:</strong> <Tag>{payment.payee}</Tag>
+                                  </Paragraph>
+                                  <Paragraph>
+                                    <strong>freelancer:</strong> <Tag>{payment.payer}</Tag>
+                                  </Paragraph>
+                                  <Paragraph>
+                                    <strong>Message:</strong> {payment.msg}
+                                  </Paragraph>
+                                </div>
+                              )}
+                            </Card>
+                          </Card>
+                        ))}
                       </div>
                     </Card>
                   </Card>

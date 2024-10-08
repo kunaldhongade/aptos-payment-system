@@ -18,8 +18,9 @@ export const config: Config = {
 
   ourStory: {
     title: "Our Story",
-    subTitle: "Innovative freelancing Platform on Aptos",
-    description: "Our Freelancing platform offers you to create job, apply for any job and get paid.",
+    subTitle: "Innovative Payment Platform on Aptos",
+    description:
+      "Our Payment solution offers you to pay anyone and get your refund back if any problem occurred and your can view all your payments",
     discordLink: "https://discord.com",
     images: [Placeholder1, Placeholder2, Placeholder3],
   },
@@ -56,29 +57,49 @@ export const config: Config = {
 
     questions: [
       {
-        title: "What is this platform about?",
+        title: "What is the Global Payment System",
         description:
-          "Our platform connects freelancers with clients looking to hire talent for various jobs. Freelancers can browse available jobs, apply for those that match their skills, and get paid in Aptos tokens (APT) or other custom tokens.",
+          "The Global Payment System is a decentralized application that allows users to make and receive payments securely using the Aptos blockchain. It provides functionalities for making payments, viewing payment history, and processing refunds.",
       },
       {
-        title: "How do I create an account?",
-        description:
-          "There's no need to create a traditional account. Just connect your Aptos wallet using Petra or any supported wallet, and you're ready to start using the platform.",
+        title: "How do I make a payment?",
+        description: `To make a payment, follow these steps:
+        Navigate to the "Make Payment" section in the app.
+        Enter the payee's address and the amount you wish to send.
+        Click on the "Make Payment" button.
+        Confirm the transaction in your connected wallet.`,
       },
       {
-        title: "How do payments work on this platform?",
+        title: "Is there a limit on the payment amount?",
         description:
-          "All payments are made in Aptos tokens (APT) or custom tokens. Payments are handled through smart contracts, ensuring that freelancers get paid securely upon job completion.",
+          "There is no fixed limit for payments in the Global Payment System. However, you should ensure that you have sufficient balance in your wallet to cover the amount you wish to send, including any transaction fees.",
       },
       {
-        title: "How do I register as a freelancer?",
-        description:
-          "Once your Aptos wallet is connected, go to the “Register as Freelancer” section and click on the registration button. This will add you to the platform's Freelancer Registry.",
+        title: "How can I view my payment history?",
+        description: `You can view your payment history by navigating to the "Payments History" section of the app. This section will display all your past payments, including details such as payment ID, payer, payee, amount, and timestamp.`,
       },
       {
-        title: "How do I get paid?",
-        description:
-          "Once you complete a job, the client will mark it as completed and initiate the payment process. The smart contract will transfer the agreed-upon amount directly to your wallet.",
+        title: "What should I do if I cannot see my payment?",
+        description: `If you cannot see your payment in the history, consider the following:
+        Ensure that the transaction was successfully processed.
+        Refresh the payment history by clicking the "Refresh Payments" button.
+        Check your wallet for transaction confirmation.`,
+      },
+      {
+        title: "What should I do if I encounter an error during a transaction?",
+        description: `If you encounter an error while making a payment or processing a refund, try the following:
+
+        Check your internet connection.
+        Ensure that your wallet is connected and has sufficient funds.
+        Refresh the app and try again.
+        If the problem persists, contact our support team for assistance.`,
+      },
+      {
+        title: "What should I do if I cannot see my payment?",
+        description: `If you cannot see your payment in the history, consider the following:
+        Ensure that the transaction was successfully processed.
+        Refresh the payment history by clicking the "Refresh Payments" button.
+        Check your wallet for transaction confirmation.`,
       },
     ],
   },

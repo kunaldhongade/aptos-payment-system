@@ -2,6 +2,7 @@ module my_addrx::GlobalPaymentSystem {
     use std::coin::{transfer};
     use std::aptos_coin::AptosCoin;
     use std::signer;
+    use std::string::String;
     use std::vector;
     use std::timestamp;
 
@@ -9,6 +10,7 @@ module my_addrx::GlobalPaymentSystem {
     const ERR_INVALID_INDEX: u64 = 2;
     const ERR_NO_PAYMENTS_COLLECTION: u64 = 3;
     const ERR_NOT_PAYEE: u64 = 4;
+    const ERR_ALREADY_INITIALIZED: u64 = 5;
 
     // Global address for storing all payments
     const Global_Payment_List: address = @sys_addrx;
@@ -19,6 +21,7 @@ module my_addrx::GlobalPaymentSystem {
         payer: address,
         payee: address,
         amount: u64,
+        msg: String,
         timestamp: u64,
     }
 
@@ -32,19 +35,22 @@ module my_addrx::GlobalPaymentSystem {
     public entry fun init_global_payment_system(account: &signer) {
         let system_address = Global_Payment_List;
 
-        if (!exists<GlobalPaymentsCollection>(system_address)) {
-            let payments_collection = GlobalPaymentsCollection {
-                payments: vector::empty<Payment>(),
-                last_payment_id: 0,
-            };
-            move_to(account, payments_collection);
-        }
+        if (exists<GlobalPaymentsCollection>(system_address)) {
+            abort(ERR_ALREADY_INITIALIZED)
+        };
+        
+        let payments_collection = GlobalPaymentsCollection {
+            payments: vector::empty<Payment>(),
+            last_payment_id: 1000,
+        };
+        move_to(account, payments_collection);
     }
 
     public entry fun make_payment(
         account: &signer,
         payee: address,
-        amount: u64
+        amount: u64,
+        msg: String
     ) acquires GlobalPaymentsCollection {
         let payer_address = signer::address_of(account);
 
@@ -66,6 +72,7 @@ module my_addrx::GlobalPaymentSystem {
             payer: payer_address,
             payee,
             amount,
+            msg,
             timestamp,
         };
 
@@ -174,6 +181,45 @@ module my_addrx::GlobalPaymentSystem {
         let i = start;
         while (i < end) {
             vector::push_back(&mut result, *vector::borrow(&global_payments_ref.payments, i));
+            i = i + 1;
+        };
+        result
+    }
+
+
+    // View all payments made by a specific address (payer)
+    #[view]
+    public fun view_payments_by_payer(payer: address): vector<Payment> acquires GlobalPaymentsCollection {
+        let global_payments_ref = borrow_global<GlobalPaymentsCollection>(Global_Payment_List);
+        let result = vector::empty<Payment>();
+
+        let i = 0;
+        let payments_len = vector::length(&global_payments_ref.payments);
+
+        while (i < payments_len) {
+            let payment_ref = vector::borrow(&global_payments_ref.payments, i);
+            if (payment_ref.payer == payer) {
+                vector::push_back(&mut result, *payment_ref);
+            };
+            i = i + 1;
+        };
+        result
+    }
+
+    // View all payments received by a specific address (payee)
+    #[view]
+    public fun view_payments_by_payee(payee: address): vector<Payment> acquires GlobalPaymentsCollection {
+        let global_payments_ref = borrow_global<GlobalPaymentsCollection>(Global_Payment_List);
+        let result = vector::empty<Payment>();
+
+        let i = 0;
+        let payments_len = vector::length(&global_payments_ref.payments);
+
+        while (i < payments_len) {
+            let payment_ref = vector::borrow(&global_payments_ref.payments, i);
+            if (payment_ref.payee == payee) {
+                vector::push_back(&mut result, *payment_ref);
+            };
             i = i + 1;
         };
         result
