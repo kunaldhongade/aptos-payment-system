@@ -1,173 +1,85 @@
-# Freelance Job Marketplace - Smart Contract
+# Global Payment System Smart Contract
 
-This repository contains the **Freelance Job Marketplace** smart contract developed on the **Aptos Blockchain**. The smart contract facilitates job posting, job acceptance, task completion, and payments between clients and freelancers using the Aptos native token, **APT**.
+## Overview
 
-## Key Features
+The **Global Payment System** is a decentralized contract built on the Aptos blockchain, designed to facilitate peer-to-peer payments and maintain a global ledger of all transactions. It offers various functionalities such as making payments, viewing transaction history, refunds, and payment details based on specific criteria. The contract stores all payment information centrally under a global address for easy access and management.
 
-- **Job Posting**: Clients can post jobs with specific descriptions, deadlines, and payment amounts.
-- **Freelancer Interaction**: Freelancers can view available jobs, accept them, and mark jobs as completed.
-- **Secure Payments**: Payments are automatically handled by the contract once the job is completed, and they are done in **APT** (Aptos native coin).
-- **Decentralized**: The entire platform runs on smart contracts, ensuring transparency and trust for both clients and freelancers.
+## Features
 
-## Prerequisites
+- **Global Storage**: All payments are stored in a global ledger accessible through a single address, making it easier to track and query transactions.
+- **Payments**: Users can make payments in Aptos Coin (APT), and the system logs the transaction details including payer, payee, amount, and timestamp.
+- **Refunds**: Payees can issue refunds for payments they've received, transferring the original payment amount back to the payer.
+- **View Payments**: Supports multiple ways to view payments, including:
+  - All payments
+  - Payments by payer
+  - Payments by payee
+  - Payment by unique ID
+  - Payment by index
+  - Paginated views of payments
+- **Security**: Only the payee can issue refunds, ensuring secure and authorized reversal of payments.
 
-Before interacting with the contract, ensure you have the following:
+## Contract Functions
 
-- **Aptos CLI** installed (for deploying and interacting with the contract)
-- **Aptos Account** with test funds on **Devnet** (or Mainnet, if live)
+### 1. `init_global_payment_system(account: &signer)`
 
-## Setup Instructions
+Initializes the global payment system by setting up the collection to store payments. This function can only be called once to prevent redundant initializations.
 
-1. **Clone the Repository**
+### 2. `make_payment(account: &signer, payee: address, amount: u64, msg: String)`
 
-   move to the smart contract folder to your local machine:
+Transfers Aptos Coin (APT) from the payer to the specified payee and logs the payment in the global ledger. This function requires the payer to sign the transaction.
 
-   ```bash
-   cd contract
-   ```
+### 3. `refund_payment(account: &signer, payment_id: u64)`
 
-2. **Install Aptos CLI**
+Allows the payee to refund a previously received payment by its ID. This function transfers the original payment amount back to the payer and removes the payment from the global ledger.
 
-   Install the Aptos CLI by following the official [Aptos CLI installation guide](https://aptos.dev/cli-tools/aptos-cli-tool/install-aptos-cli).
+### 4. `view_all_payments()`
 
-3. **Configure the Aptos Network**
+Returns a vector of all payments made on the platform.
 
-   Configure the Aptos network by running:
+### 5. `view_payment_by_index(index: u64)`
 
-   ```bash
-   aptos init
-   ```
+Returns a specific payment by its index in the global payments vector.
 
-   Choose the appropriate network (`devnet`, `testnet`, or `mainnet`) and set up your account.
+### 6. `view_payment_by_id(payment_id: u64)`
 
-4. **Compile the Contract**
+Returns a specific payment by its unique payment ID.
 
-   Compile the contract to the Aptos network using:
+### 7. `view_total_payments()`
 
-   ```bash
-   aptos move compile
-   ```
+Returns the total number of payments recorded in the system.
 
-5. **Deploy the Contract**
+### 8. `view_payments_paginated(start: u64, limit: u64)`
 
-   Deploy the contract to the Aptos network using:
+Returns a paginated list of payments starting from the specified index (`start`) and limited by the number of records (`limit`).
 
-   ```bash
-   aptos move publish
-   ```
+### 9. `view_payments_by_payer(payer: address)`
 
-   This will deploy the smart contract to your Aptos account on the selected network.
+Returns a vector of all payments made by a specific payer.
 
-## Smart Contract Functions
+### 10. `view_payments_by_payee(payee: address)`
 
-### 1. **initialize_platform**
+Returns a vector of all payments received by a specific payee.
 
-Initializes the platform by setting up the job holder and freelancer registry.
+## Errors
 
-```move
-public entry fun initialize_platform(admin: &signer)
-```
+The contract includes custom error codes for handling various failure cases:
 
-### 2. **register_freelancer**
+- `ERR_PAYMENT_NOT_FOUND`: The specified payment was not found.
+- `ERR_INVALID_INDEX`: The provided index is invalid.
+- `ERR_NO_PAYMENTS_COLLECTION`: The payments collection does not exist.
+- `ERR_NOT_PAYEE`: Only the payee can issue a refund for a payment.
+- `ERR_ALREADY_INITIALIZED`: The global payment system is already initialized.
 
-Allows a freelancer to register on the platform.
+## Usage Guide
 
-```move
-public entry fun register_freelancer(freelancer: &signer)
-```
+1. **Initialization**: Call the `init_global_payment_system()` function once to initialize the global payment system. Only one instance can exist.
+2. **Making Payments**: Use `make_payment()` to transfer funds from the payer to the payee. The system will automatically log the payment details such as the amount, payer, payee, and a message attached to the payment.
 
-### 3. **post_job**
+3. **Refunding Payments**: Payees can call the `refund_payment()` function with the payment ID to refund the payment amount back to the payer. Only the payee can perform this action.
 
-Clients can post new jobs, providing job details such as description, payment amount, and deadline.
+4. **Viewing Payments**: Utilize various view functions like `view_all_payments()`, `view_payment_by_id()`, or `view_payments_by_payer()` to track and analyze transactions.
 
-```move
-public entry fun post_job(
-    client: &signer,
-    job_id: u64,
-    description: String,
-    payment_amount: u64,
-    job_deadline: u64
-)
-```
+## Security Considerations
 
-### 4. **accept_job**
-
-Freelancers can accept a job by its job ID.
-
-```move
-public entry fun accept_job(
-    freelancer: &signer,
-    job_id: u64
-)
-```
-
-### 5. **complete_job**
-
-Freelancers mark a job as completed once the task is done.
-
-```move
-public entry fun complete_job(
-    freelancer: &signer,
-    job_id: u64
-)
-```
-
-### 6. **pay_freelancer**
-
-Clients pay freelancers after the job is marked as completed. Payment is in **APT**.
-
-```move
-public entry fun pay_freelancer(
-    client: &signer,
-    job_id: u64,
-    payment_amount: u64
-)
-```
-
-### 7. **view_all_jobs**
-
-Fetches all the jobs posted on the platform.
-
-```move
-#[view]
-public fun view_all_jobs(): vector<Job>
-```
-
-### 8. **view_job_by_id**
-
-Fetches details of a specific job using its job ID.
-
-```move
-#[view]
-public fun view_job_by_id(job_id: u64): Job
-```
-
-### 9. **view_jobs_by_client**
-
-Fetches all jobs posted by a specific client.
-
-```move
-#[view]
-public fun view_jobs_by_client(client: address): vector<Job>
-```
-
-### 10. **view_jobs_by_freelancer**
-
-Fetches all jobs accepted by a freelancer.
-
-```move
-#[view]
-public fun view_jobs_by_freelancer(freelancer: address): vector<Job>
-```
-
-## Security
-
-- Ensure that the contract owner is the only entity able to initialize the platform.
-- Freelancers must be registered before they can accept jobs.
-- Payments are only made after job completion is verified, ensuring fair transactions.
-
-## Conclusion
-
-This smart contract allows for seamless job management and payment solutions between clients and freelancers. It ensures trust and transparency, thanks to the immutable nature of the Aptos blockchain.
-
-If you have any questions about how to interact with the contract or need further assistance, feel free to reach out!
+- **Refunds**: Only the payee can initiate a refund, which ensures that refunds are secure and authorized.
+- **Global Storage**: The contract stores all payment data centrally under the address defined as `Global_Payment_List`, ensuring a unified, queryable ledger for all transactions.
