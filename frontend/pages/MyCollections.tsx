@@ -155,10 +155,10 @@ export function MyCollections() {
                                     <Tag>{convertAmountFromOnChainToHumanReadable(payment.amount, 8)}</Tag>
                                   </Paragraph>
                                   <Paragraph>
-                                    <strong>Client:</strong> <Tag>{payment.payee}</Tag>
+                                    <strong>Payee:</strong> <Tag>{payment.payee}</Tag>
                                   </Paragraph>
                                   <Paragraph>
-                                    <strong>freelancer:</strong> <Tag>{payment.payer}</Tag>
+                                    <strong>Payer:</strong> <Tag>{payment.payer}</Tag>
                                   </Paragraph>
                                   <Paragraph>
                                     <strong>Message:</strong> {payment.msg}
@@ -192,10 +192,10 @@ export function MyCollections() {
                             <Tag>{convertAmountFromOnChainToHumanReadable(payment.amount, 8)}</Tag>
                           </Paragraph>
                           <Paragraph>
-                            <strong>Client:</strong> <Tag>{payment.payee}</Tag>
+                            <strong>Payee:</strong> <Tag>{payment.payee}</Tag>
                           </Paragraph>
                           <Paragraph>
-                            <strong>freelancer:</strong> <Tag>{payment.payer}</Tag>
+                            <strong>Payer:</strong> <Tag>{payment.payer}</Tag>
                           </Paragraph>
                           <Paragraph>
                             <strong>Message:</strong> {payment.msg}

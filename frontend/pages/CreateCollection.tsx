@@ -197,7 +197,7 @@ export function CreateCollection() {
 
   return (
     <>
-      <LaunchpadHeader title="Create Job" />
+      <LaunchpadHeader title="Make Payments" />
       <div className="flex flex-col items-center justify-center px-4 py-2 gap-4 max-w-screen-xl mx-auto">
         <div className="w-full flex flex-col gap-y-4">
           <Card>
@@ -225,8 +225,8 @@ export function CreateCollection() {
                   <Input placeholder="Enter Address of Payee" />
                 </Form.Item>
 
-                <Form.Item label="Payment Amount" name="payment_amount" rules={[{ required: true }]}>
-                  <Input placeholder="Enter Your Amount" />
+                <Form.Item label="Payment Amount (APT)" name="amount" rules={[{ required: true }]}>
+                  <Input placeholder="Enter Your Amount" type="number" />
                 </Form.Item>
 
                 <Form.Item label="Message" name="msg" rules={[{ required: true }]}>
@@ -293,10 +293,10 @@ export function CreateCollection() {
                             <Tag>{convertAmountFromOnChainToHumanReadable(payment.amount, 8)}</Tag>
                           </Paragraph>
                           <Paragraph>
-                            <strong>Client:</strong> <Tag>{payment.payee}</Tag>
+                            <strong>Payee:</strong> <Tag>{payment.payee}</Tag>
                           </Paragraph>
                           <Paragraph>
-                            <strong>freelancer:</strong> <Tag>{payment.payer}</Tag>
+                            <strong>Payer:</strong> <Tag>{payment.payer}</Tag>
                           </Paragraph>
                           <Paragraph>
                             <strong>Message:</strong> {payment.msg}
@@ -327,10 +327,10 @@ export function CreateCollection() {
                             <Tag>{convertAmountFromOnChainToHumanReadable(payment.amount, 8)}</Tag>
                           </Paragraph>
                           <Paragraph>
-                            <strong>Client:</strong> <Tag>{payment.payee}</Tag>
+                            <strong>Payee:</strong> <Tag>{payment.payee}</Tag>
                           </Paragraph>
                           <Paragraph>
-                            <strong>freelancer:</strong> <Tag>{payment.payer}</Tag>
+                            <strong>Payer:</strong> <Tag>{payment.payer}</Tag>
                           </Paragraph>
                           <Paragraph>
                             <strong>Message:</strong> {payment.msg}
@@ -361,10 +361,10 @@ export function CreateCollection() {
                             <Tag>{convertAmountFromOnChainToHumanReadable(payment.amount, 8)}</Tag>
                           </Paragraph>
                           <Paragraph>
-                            <strong>Client:</strong> <Tag>{payment.payee}</Tag>
+                            <strong>Payee:</strong> <Tag>{payment.payee}</Tag>
                           </Paragraph>
                           <Paragraph>
-                            <strong>freelancer:</strong> <Tag>{payment.payer}</Tag>
+                            <strong>Payer:</strong> <Tag>{payment.payer}</Tag>
                           </Paragraph>
                           <Paragraph>
                             <strong>Message:</strong> {payment.msg}
