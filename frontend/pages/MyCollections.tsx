@@ -7,6 +7,7 @@ import { InputViewFunctionData } from "@aptos-labs/ts-sdk";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { Input, message, Table, Tag, Typography } from "antd";
 import "dotenv/config";
+
 import { useEffect, useState } from "react";
 const { Column } = Table;
 const { Paragraph } = Typography;
@@ -83,6 +84,7 @@ export function MyCollections() {
     fetchAllPayments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
+
   return (
     <>
       <LaunchpadHeader title="All Payments" />
@@ -139,7 +141,7 @@ export function MyCollections() {
                 >
                   Fetch Payment
                 </Button>
-                {paymentById && (
+                {paymentById ? (
                   <Card key={paymentById.payment_id} className="mb-6 shadow-lg p-4">
                     <Card style={{ marginTop: 16, padding: 16 }}>
                       <div className="p-2">
@@ -166,6 +168,10 @@ export function MyCollections() {
                       </div>
                     </Card>
                   </Card>
+                ) : (
+                  <Paragraph>
+                    <strong>Invalid ID</strong>
+                  </Paragraph>
                 )}
               </div>
             </CardContent>
