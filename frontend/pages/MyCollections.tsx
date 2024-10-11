@@ -141,33 +141,28 @@ export function MyCollections() {
                 </Button>
                 {paymentById && (
                   <Card key={paymentById.payment_id} className="mb-6 shadow-lg p-4">
-                    <p className="text-sm text-gray-500 mb-4">Job ID: {paymentById.payment_id}</p>
                     <Card style={{ marginTop: 16, padding: 16 }}>
                       <div className="p-2">
-                        {payments.map((payment, index) => (
-                          <Card key={index} className="mb-6 shadow-lg p-4">
-                            <p className="text-sm text-gray-500 mb-4">Payments ID: {payment.payment_id}</p>
-                            <Card style={{ marginTop: 16, padding: 16 }}>
-                              {payment && (
-                                <div>
-                                  <Paragraph>
-                                    <strong>Amount:</strong>{" "}
-                                    <Tag>{convertAmountFromOnChainToHumanReadable(payment.amount, 8)}</Tag>
-                                  </Paragraph>
-                                  <Paragraph>
-                                    <strong>Payee:</strong> <Tag>{payment.payee}</Tag>
-                                  </Paragraph>
-                                  <Paragraph>
-                                    <strong>Payer:</strong> <Tag>{payment.payer}</Tag>
-                                  </Paragraph>
-                                  <Paragraph>
-                                    <strong>Message:</strong> {payment.msg}
-                                  </Paragraph>
-                                </div>
-                              )}
-                            </Card>
+                        <Card className="mb-6 shadow-lg p-4">
+                          <p className="text-sm text-gray-500 mb-4">Payments ID: {paymentID}</p>
+                          <Card style={{ marginTop: 16, padding: 16 }}>
+                            <div>
+                              <Paragraph>
+                                <strong>Amount:</strong>{" "}
+                                <Tag>{convertAmountFromOnChainToHumanReadable(paymentById.amount, 8)}</Tag>
+                              </Paragraph>
+                              <Paragraph>
+                                <strong>Payee:</strong> <Tag>{paymentById.payee}</Tag>
+                              </Paragraph>
+                              <Paragraph>
+                                <strong>Payer:</strong> <Tag>{paymentById.payer}</Tag>
+                              </Paragraph>
+                              <Paragraph>
+                                <strong>Message:</strong> {paymentById.msg}
+                              </Paragraph>
+                            </div>
                           </Card>
-                        ))}
+                        </Card>
                       </div>
                     </Card>
                   </Card>
