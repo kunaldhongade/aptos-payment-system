@@ -5,14 +5,15 @@ import Placeholder3 from "@/assets/placeholders/bear-3.png";
 export const config: Config = {
   // Removing one or all of these socials will remove them from the page
   socials: {
-    twitter: "https://twitter.com/kunaldhongade",
+    twitter: "https://twitter.com",
     discord: "https://discord.com",
-    homepage: "https://kunaldhongade.vercel.app",
+    homepage: "/",
   },
 
   defaultCollection: {
-    name: "Lorem Ipsum",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris congue convallis augue in pharetra.",
+    name: "Global Payment Collection",
+    description:
+      "A secure payment system allowing users to make transactions and manage refunds on the Aptos blockchain.",
     image: Placeholder1,
   },
 
@@ -20,7 +21,7 @@ export const config: Config = {
     title: "Our Story",
     subTitle: "Innovative Payment Platform on Aptos",
     description:
-      "Our Payment solution offers you to pay anyone and get your refund back if any problem occurred and your can view all your payments",
+      "Our platform allows users to make secure payments, view their transaction history, and receive refunds when necessary. With a transparent and decentralized structure, we ensure safe and seamless payments on the Aptos blockchain.",
     discordLink: "https://discord.com",
     images: [Placeholder1, Placeholder2, Placeholder3],
   },
@@ -29,20 +30,20 @@ export const config: Config = {
     title: "Our Team",
     members: [
       {
-        name: "Kunal",
+        name: "Alex",
         role: "Blockchain Developer",
         img: Placeholder1,
         socials: {
-          twitter: "https://twitter.com/kunaldhongade",
+          twitter: "https://twitter.com",
         },
       },
       {
-        name: "Soham",
+        name: "Jordan",
         role: "Marketing Specialist",
         img: Placeholder2,
       },
       {
-        name: "Amrita",
+        name: "Taylor",
         role: "Community Manager",
         img: Placeholder3,
         socials: {
@@ -57,22 +58,22 @@ export const config: Config = {
 
     questions: [
       {
-        title: "What is the Global Payment System",
+        title: "What is the Global Payment System?",
         description:
           "The Global Payment System is a decentralized application that allows users to make and receive payments securely using the Aptos blockchain. It provides functionalities for making payments, viewing payment history, and processing refunds.",
       },
       {
         title: "How do I make a payment?",
         description: `To make a payment, follow these steps:
-        Navigate to the "Make Payment" section in the app.
-        Enter the payee's address and the amount you wish to send.
-        Click on the "Make Payment" button.
-        Confirm the transaction in your connected wallet.`,
+        1. Navigate to the "Make Payment" section in the app.
+        2. Enter the payee's address and the amount you wish to send.
+        3. Click on the "Make Payment" button.
+        4. Confirm the transaction in your connected wallet.`,
       },
       {
         title: "Is there a limit on the payment amount?",
         description:
-          "There is no fixed limit for payments in the Global Payment System. However, you should ensure that you have sufficient balance in your wallet to cover the amount you wish to send, including any transaction fees.",
+          "There is no fixed limit for payments in the Global Payment System. However, ensure that you have sufficient balance in your wallet to cover the amount you wish to send, including any transaction fees.",
       },
       {
         title: "How can I view my payment history?",
@@ -81,25 +82,17 @@ export const config: Config = {
       {
         title: "What should I do if I cannot see my payment?",
         description: `If you cannot see your payment in the history, consider the following:
-        Ensure that the transaction was successfully processed.
-        Refresh the payment history by clicking the "Refresh Payments" button.
-        Check your wallet for transaction confirmation.`,
+        1. Ensure that the transaction was successfully processed.
+        2. Refresh the payment history by clicking the "Refresh Payments" button.
+        3. Check your wallet for transaction confirmation.`,
       },
       {
         title: "What should I do if I encounter an error during a transaction?",
         description: `If you encounter an error while making a payment or processing a refund, try the following:
-
-        Check your internet connection.
-        Ensure that your wallet is connected and has sufficient funds.
-        Refresh the app and try again.
-        If the problem persists, contact our support team for assistance.`,
-      },
-      {
-        title: "What should I do if I cannot see my payment?",
-        description: `If you cannot see your payment in the history, consider the following:
-        Ensure that the transaction was successfully processed.
-        Refresh the payment history by clicking the "Refresh Payments" button.
-        Check your wallet for transaction confirmation.`,
+        1. Check your internet connection.
+        2. Ensure that your wallet is connected and has sufficient funds.
+        3. Refresh the app and try again.
+        4. If the problem persists, contact our support team for assistance.`,
       },
     ],
   },
